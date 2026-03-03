@@ -619,7 +619,7 @@
         
         function renderScene(scene) {
             const container = document.getElementById('game-scene');
-            container.innerHTML = ''; const dialogBox = document.createElement('div'); dialogBox.id = 'dialog-box'; container.appendChild(dialogBox);
+            container.innerHTML = '<div id="dialog-box"><div id="dialog-name"></div><div id="dialog-text"></div><div id="choices"></div></div>';
             
             const scenes = {
                 'town-entrance': () => {

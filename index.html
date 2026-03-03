@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>纸扎铺 - 完整版</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0a0a;
+            color: #e0d5c0;
+            font-family: 'SimSun', serif;
+            overflow: hidden;
+            height: 100vh;
+        }
+        #game-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            background: linear-gradient(180deg, #1a1510 0%, #0d0a08 100%);
+        }
+        #scene {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            background-size: cover;
+            background-position: center;
+            transition: all 0.5s ease;
+        }
+        /* 纸人 */
+        .paper-man {
+            position: absolute;
+            width: 80px;
+            height: 160px;
+            background: #f5f0e0;
+            border-radius: 10px 10px 0 0;
+            box-shadow: 0 0 20px rgba(255, 200, 100, 0.3);
+            animation: sway 3s ease-in-out infinite;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .paper-man:hover { transform: scale(1.1); }
+        .paper-man::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: #f5f0e0;
+            border-radius: 50%;
+        }
+        .paper-man .eye {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #1a1a1a;
+            border-radius: 50%;
+            top: 35px;
+        }
+        .paper-man .eye.left { left: 30px; }
+        .paper-man .eye.right { right: 30px; }
+        .paper-man .mouth {
+            position: absolute;
+            width: 20px;
+            height: 8px;
+            border-bottom: 3px solid #c00;
+            border-radius: 0 0 10px 10px;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        @keyframes sway {
+            0%, 100% { transform: rotate(-1deg); }
+            50% { transform: rotate(1deg); }
+        }
+        /* 灯笼 */
+        .lantern {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            background: radial-gradient(circle, #ff6b35 0%, #c00 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 30px rgba(255, 100, 50, 0.5);
+            animation: glow 2s ease-in-out infinite;
+            cursor: pointer;
+        }
+        .lantern::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 15px;
+            background: #4a3728;
+            border-radius: 5px 5px 0 0;
+        }
+        .lantern::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 20px;
+            background: linear-gradient(180deg, #8b4513, #d4a574);
+        }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 30px rgba(255, 100, 50, 0.5); filter: brightness(1); }
+            50% { box-shadow: 0 0 50px rgba(255, 100, 50, 0.8); filter: brightness(1.2); }
+        }
+        /* UI */
+        #ui {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        #dialog-box {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            max-width: 800px;
+            background: rgba(20, 15, 10, 0.95);
+            border: 2px solid #8b7355;
+            border-radius: 10px;
+            padding: 20px;
+            pointer-events: auto;
+        }
+        #dialog-name {
+            color: #ffd700;
+            font-size: 18px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        #dialog-text {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #e0d5c0;
+        }
+        #choices {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .choice-btn {
+            background: linear-gradient(180deg, #3a2a1a 0%, #2a1a0a 100%);
+            border: 1px solid #8b7355;
+            color: #e0d5c0;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'SimSun', serif;
+            transition: all 0.3s;
+        }
+        .choice-btn:hover {
+            background: linear-gradient(180deg, #4a3a2a 0%, #3a2a1a 100%);
+            border-color: #ffd700;
+            color: #ffd700;
+        }
+        /* 状态栏 */
+        #status-bar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(20, 15, 10, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #8b7355;
+        }
+        #status-bar h3 {
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .status-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+        .status-bar-fill {
+            width: 100px;
+            height: 10px;
+            background: #2a1a0a;
+            border-radius: 5px;
+            margin-left: 10px;
+            overflow: hidden;
+        }
+        .status-bar-inner {
+            height: 100%;
+            background: linear-gradient(90deg, #c00, #ff6b35);
+            transition: width 0.3s;
+        }
+        #sanity-bar .status-bar-inner { background: linear-gradient(90deg, #00c, #0ff); }
+        #hope-bar .status-bar-inner { background: linear-gradient(90deg, #0a0, #0f0); }
+        /* 物品栏 */
+        #inventory {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(20, 15, 10, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #8b7355;
+        }
+        #inventory h3 {
+            color: #ffd700;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+        .inventory-slot {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: #2a1a0a;
+            border: 1px solid #8b7355;
+            border-radius: 5px;
+            margin: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .inventory-slot:hover {
+            border-color: #ffd700;
+            transform: scale(1.1);
+        }
+        /* 标题画面 */
+        #title-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, #1a1510 0%, #0d0a08 50%, #1a0a0a 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+        #title-screen h1 {
+            font-size: 72px;
+            color: #c00;
+            text-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+            margin-bottom: 20px;
+            letter-spacing: 20px;
+            animation: titlePulse 3s ease-in-out infinite;
+        }
+        @keyframes titlePulse {
+            0%, 100% { text-shadow: 0 0 30px rgba(255, 0, 0, 0.5); }
+            50% { text-shadow: 0 0 50px rgba(255, 0, 0, 0.8); }
+        }
+        #title-screen .subtitle {
+            font-size: 24px;
+            color: #8b7355;
+            margin-bottom: 50px;
+        }
+        .menu-btn {
+            background: transparent;
+            border: 2px solid #8b7355;
+            color: #e0d5c0;
+            padding: 15px 60px;
+            margin: 10px;
+            font-size: 18px;
+            cursor: pointer;
+            font-family: 'SimSun', serif;
+            transition: all 0.3s;
+            pointer-events: auto;
+        }
+        .menu-btn:hover {
+            background: rgba(139, 115, 85, 0.3);
+            border-color: #ffd700;
+            color: #ffd700;
+            transform: scale(1.05);
+        }
+        /* 雾气效果 */
+        #fog {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, transparent 0%, rgba(10, 8, 5, 0.5) 100%);
+            pointer-events: none;
+        }
+        /* 月亮 */
+        .moon {
+            position: absolute;
+            top: 80px;
+            right: 150px;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at 30% 30%, #ffffd0, #caca80);
+            border-radius: 50%;
+            box-shadow: 0 0 50px rgba(255, 255, 200, 0.3);
+        }
+        /* 系统菜单 */
+        #system-menu {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            pointer-events: auto;
+        }
+        .system-btn {
+            background: rgba(20, 15, 10, 0.8);
+            border: 1px solid #8b7355;
+            color: #e0d5c0;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'SimSun', serif;
+            font-size: 14px;
+        }
+        .system-btn:hover {
+            background: rgba(139, 115, 85, 0.3);
+            border-color: #ffd700;
+        }
+        /* 通知 */
+        #notification {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(20, 15, 10, 0.95);
+            border: 2px solid #ffd700;
+            padding: 15px 30px;
+            border-radius: 10px;
+            color: #ffd700;
+            font-size: 16px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        #notification.show { opacity: 1; }
+        /* 章节标题 */
+        #chapter-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            color: #c00;
+            text-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
+            opacity: 0;
+            transition: opacity 1s;
+            pointer-events: none;
+            z-index: 999;
+        }
+        #chapter-title.show { opacity: 1; }
+        /* 场景元素 */
+        .scene-object {
+            position: absolute;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .scene-object:hover {
+            transform: scale(1.05);
+            filter: brightness(1.2);
+        }
+        /* 纸扎铺门牌 */
+        .shop-sign {
+            position: absolute;
+            top: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2a1a0a;
+            padding: 10px 30px;
+            border: 2px solid #8b7355;
+            font-size: 28px;
+            color: #c00;
+            letter-spacing: 5px;
+        }
+        /* 彼岸花 */
+        .red-flower {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: radial-gradient(circle, #f00 0%, #800 100%);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+        }
+        /* 灵堂 */
+        .shrine {
+            position: absolute;
+            width: 200px;
+            height: 150px;
+            background: linear-gradient(180deg, #3a2a1a 0%, #1a1a1a 100%);
+            border: 3px solid #8b7355;
+        }
+        .shrine::before {
+            content: '奠';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 80px;
+            color: #fff;
+        }
+        /* 迷雾效果 */
+        .mist {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(200,200,200,0.1) 0%, transparent 70%);
+            animation: mistMove 10s ease-in-out infinite;
+        }
+        @keyframes mistMove {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(20px); }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="scene"></div>
+        <div id="fog"></div>
+        <div id="ui">
+            <div id="system-menu" style="display: none;">
+                <button class="system-btn" onclick="saveGame()">💾 存档</button>
+                <button class="system-btn" onclick="loadGame()">📂 读档</button>
+                <button class="system-btn" onclick="toggleSound()">🔊 <span id="sound-status">开</span></button>
+                <button class="system-btn" onclick="showHelp()">❓ 帮助</button>
+                <button class="system-btn" onclick="showMap()">🗺️ 地图</button>
+            </div>
+            <div id="status-bar">
+                <h3>状态</h3>
+                <div class="status-item">理智<div class="status-bar-fill"><div class="status-bar-inner" style="width: 80%"></div></div></div>
+                <div class="status-item" id="sanity-bar">希望<div class="status-bar-fill"><div class="status-bar-inner" style="width: 60%"></div></div></div>
+            </div>
+            <div id="inventory">
+                <h3>物品</h3>
+                <div class="inventory-slot" title="灯笼">🏮</div>
+                <div class="inventory-slot" title="纸张">📜</div>
+                <div class="inventory-slot" title="蜡烛">🕯️</div>
+            </div>
+        </div>
+        <div id="title-screen">
+            <div class="moon"></div>
+            <h1>纸扎铺</h1>
+            <p class="subtitle">中式恐怖解谜游戏 - 完整版</p>
+            <button class="menu-btn" onclick="startGame()">开始游戏</button>
+            <button class="menu-btn" onclick="showAbout()">关于游戏</button>
+            <button class="menu-btn" onclick="showCredits()">制作人员</button>
+        </div>
+        <div id="game-scene" style="display: none;"></div>
+        <div id="notification"></div>
+        <div id="chapter-title"></div>
+    </div>
+    <script>
+        // 游戏状态
+        const gameState = {
+            sanity: 80,
+            hope: 60,
+            currentScene: 'title',
+            currentChapter: 1,
+            inventory: ['lantern', 'paper', 'candle'],
+            flags: {},
+            soundEnabled: true,
+            visited: []
+        };
+        let audioContext = null;
+        
+        function initAudio() {
+            if (!audioContext) audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        function playSound(type) {
+            if (!gameState.soundEnabled || !audioContext) return;
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            switch(type) {
+                case 'click': oscillator.frequency.value = 800; gainNode.gain.setValueAtTime(0.1, audioContext.currentTime); oscillator.start(); oscillator.stop(audioContext.currentTime + 0.05); break;
+                case 'scare': oscillator.frequency.value = 200; gainNode.gain.setValueAtTime(0.3, audioContext.currentTime); oscillator.start(); oscillator.stop(audioContext.currentTime + 0.3); break;
+                case 'item': oscillator.frequency.value = 1200; gainNode.gain.setValueAtTime(0.1, audioContext.currentTime); oscillator.start(); oscillator.stop(audioContext.currentTime + 0.1); break;
+                case 'step': oscillator.frequency.value = 300; gainNode.gain.setValueAtTime(0.05, audioContext.currentTime); oscillator.start(); oscillator.stop(audioContext.currentTime + 0.03); break;
+            }
+        }
+        
+        function startGame() {
+            initAudio();
+            playSound('click');
+            document.getElementById('title-screen').style.display = 'none';
+            document.getElementById('game-scene').style.display = 'block';
+            document.getElementById('system-menu').style.display = 'flex';
+            startChapter1();
+        }
+        
+        function showAbout() {
+            playSound('click');
+            showDialog('关于游戏', '《纸扎铺》- 中式恐怖解谜游戏\n\n故事背景：江南小镇的纸扎铺，传承百年的手艺，却隐藏着不为人知的秘密...\n\n完整版包含：\n• 5 章节剧情\n• 12 个场景\n• 3 种结局\n• 完整音效系统', [
+                { text: '返回', action: () => location.reload() }
+            ]);
+        }
+        
+        function showCredits() {
+            playSound('click');
+            showDialog('制作人员', '策划：AI Assistant\n程序：AI Assistant\n美术：CSS 生成\n音乐：Web Audio API\n\n感谢游玩！', [
+                { text: '返回', action: () => location.reload() }
+            ]);
+        }
+        
+        function showHelp() {
+            playSound('click');
+            showNotification('点击场景元素互动 • 理智过低会触发坏结局 • 记得经常存档！');
+        }
+        
+        function showMap() {
+            playSound('click');
+            const mapText = '📍 当前位置：' + getSceneName(gameState.currentScene) + '\n\n已探索：' + gameState.visited.join(' → ');
+            showDialog('地图', mapText, [{ text: '关闭', action: () => {} }]);
+        }
+        
+        function getSceneName(scene) {
+            const names = {
+                'town-entrance': '小镇入口', 'old-house-yard': '老宅院子', 'old-house-hall': '老宅客厅',
+                'shop-exterior': '纸扎铺门面', 'shop-interior': '纸扎铺内部', 'shop-secret': '纸扎铺密室',
+                'dream': '梦境世界', 'boundary': '阴阳边界', 'paper-world': '纸扎世界',
+                'riverside': '河边', 'shrine': '祠堂', 'graveyard': '墓地'
+            };
+            return names[scene] || scene;
+        }
+        
+        function showDialog(name, text, choices) {
+            document.getElementById('dialog-name').textContent = name;
+            document.getElementById('dialog-text').textContent = text;
+            const choicesDiv = document.getElementById('choices');
+            choicesDiv.innerHTML = '';
+            choices.forEach((choice, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.textContent = choice.text;
+                btn.onclick = () => { playSound('click'); choice.action(); };
+                choicesDiv.appendChild(btn);
+            });
+        }
+        
+        function showNotification(text) {
+            const notification = document.getElementById('notification');
+            notification.textContent = text;
+            notification.classList.add('show');
+            setTimeout(() => notification.classList.remove('show'), 3000);
+        }
+        
+        function showChapterTitle(title) {
+            const el = document.getElementById('chapter-title');
+            el.textContent = title;
+            el.classList.add('show');
+            setTimeout(() => el.classList.remove('show'), 2000);
+        }
+        
+        function updateStatus() {
+            document.querySelectorAll('.status-bar-inner')[0].style.width = gameState.sanity + '%';
+            document.querySelectorAll('.status-bar-inner')[1].style.width = gameState.hope + '%';
+            if (gameState.sanity <= 0) badEnding();
+        }
+        
+        function updateInventory() {
+            const inventorySlots = document.querySelectorAll('.inventory-slot');
+            const defaultItems = ['🏮', '📜', '🕯️'];
+            
+            inventorySlots.forEach((slot, index) => {
+                if (index < gameState.inventory.length) {
+                    const item = gameState.inventory[index];
+                    if (item === 'key') {
+                        slot.textContent = '🔑';
+                        slot.title = '神秘钥匙';
+                    } else {
+                        slot.textContent = defaultItems[index];
+                        slot.title = ['灯笼', '纸张', '蜡烛'][index];
+                    }
+                } else {
+                    slot.textContent = defaultItems[index];
+                    slot.title = ['灯笼', '纸张', '蜡烛'][index];
+                }
+            });
+        }
+        
+        function saveGame() {
+            playSound('item');
+            localStorage.setItem('zhizhupu_save_v3', JSON.stringify(gameState));
+            showNotification('✅ 游戏已保存');
+        }
+        
+        function loadGame() {
+            playSound('item');
+            const saveData = localStorage.getItem('zhizhupu_save_v3');
+            if (saveData) {
+                const loaded = JSON.parse(saveData);
+                Object.assign(gameState, loaded);
+                updateStatus();
+                showNotification('✅ 游戏已加载');
+                renderScene(gameState.currentScene);
+            } else {
+                showNotification('❌ 没有找到存档');
+            }
+        }
+        
+        function toggleSound() {
+            gameState.soundEnabled = !gameState.soundEnabled;
+            document.getElementById('sound-status').textContent = gameState.soundEnabled ? '开' : '关';
+            showNotification(gameState.soundEnabled ? '🔊 音效已开启' : '🔇 音效已关闭');
+        }
+        
+        function renderScene(scene) {
+            const container = document.getElementById('game-scene');
+            container.innerHTML = '<div id="dialog-box"><div id="dialog-name"></div><div id="dialog-text"></div><div id="choices"></div></div>';
+            
+            const scenes = {
+                'town-entrance': () => {
+                    container.innerHTML += '<div class="shop-sign">青石镇</div><div class="moon"></div>';
+                    renderDialog('叙述', '你来到了青石镇的入口。石板路在月光下泛着冷光，四周一片寂静。', [
+                        { text: '前往老宅', action: () => changeScene('old-house-yard') },
+                        { text: '前往纸扎铺', action: () => changeScene('shop-exterior') }
+                    ]);
+                },
+                'old-house-yard': () => {
+                    container.innerHTML += '<div class="shrine" style="top:100px;left:50%;transform:translateX(-50%)"></div><div class="red-flower" style="bottom:50px;left:100px"></div><div class="red-flower" style="bottom:50px;right:100px"></div>';
+                    renderDialog('叙述', '你回到了老宅。院子里杂草丛生，破败不堪。正厅里设着灵堂。', [
+                        { text: '进入客厅', action: () => changeScene('old-house-hall') },
+                        { text: '前往纸扎铺', action: () => changeScene('shop-exterior') }
+                    ]);
+                },
+                'old-house-hall': () => {
+                    container.innerHTML += '<div class="shrine" style="top:50; left:50%;transform:translate(-50%,-50%)"></div>';
+                    renderDialog('叙述', '客厅里设着奶奶的灵堂。牌位上写着"陈门李氏之灵位"。', [
+                        { text: '祭拜奶奶', action: () => { gameState.hope += 10; updateStatus(); showNotification('你祭拜了奶奶，心中稍感安慰'); renderDialog('叙述', '你祭拜了奶奶，心中稍感安慰。', [{ text: '继续', action: () => changeScene('old-house-yard') }]); } },
+                        { text: '离开', action: () => changeScene('old-house-yard') }
+                    ]);
+                },
+                'shop-exterior': () => {
+                    container.innerHTML += '<div class="shop-sign">张记纸扎</div><div class="lantern" style="top:150px;left:200px" onclick="interact(\'lantern\')"></div><div class="lantern" style="top:150px;right:200px" onclick="interact(\'lantern\')"></div><div class="paper-man" style="bottom:100px;left:300px" onclick="interact(\'paperman\')"><div class="eye left"></div><div class="eye right"></div><div class="mouth"></div></div><div class="paper-man" style="bottom:100px;right:300px" onclick="interact(\'paperman\')"><div class="eye left"></div><div class="eye right"></div><div class="mouth"></div></div>';
+                    renderDialog('叙述', '张记纸扎铺就在眼前。两盏红灯笼发出微弱的光，门口的纸人似乎在盯着你。', [
+                        { text: '进入纸扎铺', action: () => changeScene('shop-interior') },
+                        { text: '返回老宅', action: () => changeScene('old-house-yard') }
+                    ]);
+                },
+                'shop-interior': () => {
+                    container.innerHTML += '<div class="paper-man" style="bottom:100px;left:100px" onclick="interact(\'paperman\')"><div class="eye left"></div><div class="eye right"></div><div class="mouth"></div></div><div class="lantern" style="top:100px;left:50%" onclick="interact(\'lantern\')"></div>';
+                    renderDialog('张老头', '你又来了？想知道真相？', [
+                        { text: '我想知道奶奶的真相', action: () => chapter2Start() },
+                        { text: '看看有什么物品', action: () => { if (!gameState.inventory.includes('key')) { gameState.inventory.push('key'); showNotification('获得：神秘钥匙🔑'); updateInventory(); } else { showNotification('你已经拿过钥匙了'); } } },
+                        { text: '离开', action: () => changeScene('shop-exterior') }
+                    ]);
+                },
+                'shop-secret': () => {
+                    container.innerHTML += '<div class="mist"></div>';
+                    renderDialog('叙述', '你发现了密室！这里藏着张记纸扎百年的秘密...', [
+                        { text: '查看秘密', action: () => chapter4Start() }
+                    ]);
+                },
+                'dream': () => {
+                    container.innerHTML += '<div class="mist"></div><div class="red-flower" style="bottom:100px;left:20%"></div><div class="red-flower" style="bottom:100px;right:20%"></div>';
+                    renderDialog('叙述', '你进入了梦境。四周一片迷雾，隐约可见彼岸花。', [
+                        { text: '继续深入', action: () => changeScene('boundary') },
+                        { text: '醒来', action: () => changeScene('old-house-hall') }
+                    ]);
+                },
+                'boundary': () => {
+                    container.innerHTML += '<div class="mist"></div><div class="red-flower" style="bottom:50px;left:10%"></div><div class="red-flower" style="bottom:50px;right:10%"></div><div class="red-flower" style="bottom:50px;left:30%"></div><div class="red-flower" style="bottom:50px;right:30%"></div>';
+                    renderDialog('叙述', '这里是阴阳边界。彼岸花开满了道路。', [
+                        { text: '继续前行', action: () => changeScene('paper-world') },
+                        { text: '返回', action: () => changeScene('dream') }
+                    ]);
+                },
+                'paper-world': () => {
+                    container.innerHTML += '<div class="paper-man" style="bottom:100px;left:20%" onclick="interact(\'paperman\')"><div class="eye left"></div><div class="eye right"></div><div class="mouth"></div></div><div class="paper-man" style="bottom:100px;right:20%" onclick="interact(\'paperman\')"><div class="eye left"></div><div class="eye right"></div><div class="mouth"></div></div>';
+                    renderDialog('叙述', '这里是纸扎的世界。一切都是纸做的...', [
+                        { text: '探索', action: () => { gameState.sanity -= 10; updateStatus(); showNotification('理智 -10'); renderDialog('叙述', '你探索着这个诡异的世界，发现了一扇门...', [{ text: '进入', action: () => chapter3Start() }, { text: '返回', action: () => changeScene('boundary') }]); } },
+                        { text: '离开', action: () => changeScene('boundary') }
+                    ]);
+                },
+                'riverside': () => {
+                    container.innerHTML += '<div class="moon" style="top:50px;right:50px"></div>';
+                    renderDialog('叙述', '你来到河边。水面上漂浮着水灯。', [
+                        { text: '放水灯', action: () => { gameState.hope += 20; updateStatus(); showNotification('希望 +20'); } },
+                        { text: '离开', action: () => changeScene('town-entrance') }
+                    ]);
+                },
+                'shrine': () => {
+                    container.innerHTML += '<div class="shrine" style="top:50%;left:50%;transform:translate(-50%,-50%)"></div>';
+                    renderDialog('叙述', '陈家祠堂。祖先的牌位整齐排列。', [
+                        { text: '查看族谱', action: () => { showNotification('你发现了惊人的秘密...'); chapter4Start(); } },
+                        { text: '离开', action: () => changeScene('town-entrance') }
+                    ]);
+                },
+                'graveyard': () => {
+                    container.innerHTML += '<div class="red-flower" style="bottom:100px;left:30%"></div><div class="red-flower" style="bottom:100px;right:30%"></div>';
+                    renderDialog('叙述', '你来到奶奶的坟前。墓碑冰冷。', [
+                        { text: '祭拜', action: () => { gameState.hope += 30; updateStatus(); showNotification('希望 +30'); finalChoice(); } },
+                        { text: '离开', action: () => changeScene('town-entrance') }
+                    ]);
+                }
+            };
+            
+            if (scenes[scene]) scenes[scene]();
+            gameState.visited.push(getSceneName(scene));
+        }
+        
+        function renderDialog(name, text, choices) {
+            const dialogBox = document.getElementById('dialog-box');
+            dialogBox.innerHTML = '<div id="dialog-name">' + name + '</div><div id="dialog-text">' + text + '</div><div id="choices"></div>';
+            const choicesDiv = document.getElementById('choices');
+            choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = 'choice-btn';
+                btn.textContent = choice.text;
+                btn.onclick = () => { playSound('click'); choice.action(); };
+                choicesDiv.appendChild(btn);
+            });
+        }
+        
+        function changeScene(scene) {
+            playSound('step');
+            gameState.currentScene = scene;
+            renderScene(scene);
+        }
+        
+        function interact(object) {
+            playSound('click');
+            if (object === 'lantern') {
+                showNotification('灯笼：温暖的红光，驱散了一些黑暗');
+                gameState.sanity = Math.min(100, gameState.sanity + 5);
+                updateStatus();
+            } else if (object === 'paperman') {
+                showNotification('纸人：它的眼睛...好像在动？');
+                gameState.sanity -= 5;
+                updateStatus();
+                playSound('scare');
+            }
+        }
+        
+        // 章节系统
+        function startChapter1() {
+            gameState.currentChapter = 1;
+            gameState.currentScene = 'town-entrance';
+            showChapterTitle('第一章：归乡');
+            renderScene('town-entrance');
+        }
+        
+        function chapter2Start() {
+            gameState.currentChapter = 2;
+            showChapterTitle('第二章：纸人入梦');
+            changeScene('dream');
+        }
+        
+        function chapter3Start() {
+            gameState.currentChapter = 3;
+            showChapterTitle('第三章：阴宅');
+            changeScene('paper-world');
+        }
+        
+        function chapter4Start() {
+            gameState.currentChapter = 4;
+            showChapterTitle('第四章：真相');
+            renderDialog('张老头', '真相是...你奶奶三年前就去世了。我给她扎过纸人。但她似乎...没有真正离开。', [
+                { text: '什么意思？', action: () => {
+                    renderDialog('张老头', '她的执念太深，附在了纸人上。你看到的"奶奶"，是纸人变的。', [
+                        { text: '不可能！', action: () => chapter5Start() },
+                        { text: '我相信你', action: () => { gameState.hope -= 20; updateStatus(); chapter5Start(); } }
+                    ]);
+                }}
+            ]);
+        }
+        
+        function chapter5Start() {
+            gameState.currentChapter = 5;
+            showChapterTitle('终章：选择');
+            finalChoice();
+        }
+        
+        function finalChoice() {
+            renderDialog('???', '安安，你要做什么选择？', [
+                { text: '逃离这里', action: () => endingEscape() },
+                { text: '留下陪奶奶', action: () => endingStay() },
+                { text: '成为纸人', action: () => endingPaperMan() }
+            ]);
+        }
+        
+        function endingEscape() {
+            showChapterTitle('结局 1：逃离');
+            renderDialog('结局', '你逃出了青石镇。但每当夜深人静，你总能听到纸张的沙沙声...\n\n【END 1/3】', [
+                { text: '重新开始', action: () => location.reload() }
+            ]);
+        }
+        
+        function endingStay() {
+            showChapterTitle('结局 2：留下');
+            renderDialog('结局', '你决定留下来陪"奶奶"。纸扎铺里，多了一个身影...\n\n【END 2/3】', [
+                { text: '重新开始', action: () => location.reload() }
+            ]);
+        }
+        
+        function endingPaperMan() {
+            showChapterTitle('结局 3：成为纸人');
+            gameState.sanity = 0;
+            updateStatus();
+            renderDialog('结局', '你逐渐感觉身体变轻...最终，你成为了纸扎铺的一部分...\n\n【BAD ENDING 3/3】', [
+                { text: '重新开始', action: () => location.reload() }
+            ]);
+        }
+        
+        function badEnding() {
+            showChapterTitle('坏结局：崩溃');
+            renderDialog('结局', '你的理智已经耗尽。你开始分不清现实和幻觉，最终成为了纸扎铺的一部分...\n\n【BAD ENDING】', [
+                { text: '重新开始', action: () => location.reload() }
+            ]);
+        }
+        
+        // 键盘快捷键
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 's' && e.ctrlKey) { e.preventDefault(); saveGame(); }
+            if (e.key === 'l' && e.ctrlKey) { e.preventDefault(); loadGame(); }
+            if (e.key === 'm') toggleSound();
+            if (e.key === 'h') showHelp();
+        });
+    </script>
+</body>
+</html>

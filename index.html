@@ -420,7 +420,7 @@
             background: radial-gradient(ellipse at center, rgba(200,200,200,0.1) 0%, transparent 70%);
             animation: mistMove 10s ease-in-out infinite;
             pointer-events: none;
-            z-index: 1;
+            z-index: 0;
         }
         @keyframes mistMove {
             0%, 100% { transform: translateX(0); }
@@ -622,215 +622,88 @@
         
         function renderScene(scene) {
             const container = document.getElementById('game-scene');
-            container.innerHTML = '';
+            container.innerHTML = '<div id="dialog-box"><div id="dialog-name"></div><div id="dialog-text"></div><div id="choices"></div></div>';
             
             const scenes = {
                 'town-entrance': () => {
-                    const shopSign = document.createElement('div');
-                    shopSign.className = 'shop-sign';
-                    shopSign.textContent = '青石镇';
-                    container.appendChild(shopSign);
-                    
-                    const moon = document.createElement('div');
-                    moon.className = 'moon';
-                    container.appendChild(moon);
-                    
+                    container.innerHTML += '<div class="shop-sign">青石镇</div><div class="moon"></div>';
                     renderDialog('叙述', '你来到了青石镇的入口。石板路在月光下泛着冷光，四周一片寂静。', [
                         { text: '前往老宅', action: () => changeScene('old-house-yard') },
                         { text: '前往纸扎铺', action: () => changeScene('shop-exterior') }
                     ]);
                 },
                 'old-house-yard': () => {
-                    const shrine = document.createElement('div');
-                    shrine.className = 'shrine';
-                    shrine.style.cssText = 'top:100px;left:50%;transform:translateX(-50%)';
-                    container.appendChild(shrine);
-                    
-                    const flower1 = document.createElement('div');
-                    flower1.className = 'red-flower';
-                    flower1.style.cssText = 'bottom:50px;left:100px';
-                    container.appendChild(flower1);
-                    
-                    const flower2 = document.createElement('div');
-                    flower2.className = 'red-flower';
-                    flower2.style.cssText = 'bottom:50px;right:100px';
-                    container.appendChild(flower2);
-                    
+                    container.innerHTML += '<div class="shrine" style="top:100px;left:50%;transform:translateX(-50%)"></div><div class="red-flower" style="bottom:50px;left:100px"></div><div class="red-flower" style="bottom:50px;right:100px"></div>';
                     renderDialog('叙述', '你回到了老宅。院子里杂草丛生，破败不堪。正厅里设着灵堂。', [
                         { text: '进入客厅', action: () => changeScene('old-house-hall') },
                         { text: '前往纸扎铺', action: () => changeScene('shop-exterior') }
                     ]);
                 },
                 'old-house-hall': () => {
-                    const shrine = document.createElement('div');
-                    shrine.className = 'shrine';
-                    shrine.style.cssText = 'top:50%;left:50%;transform:translate(-50%,-50%)';
-                    container.appendChild(shrine);
-                    
+                    container.innerHTML += '<div class="shrine" style="top:50; left:50%;transform:translate(-50%,-50%)"></div>';
                     renderDialog('叙述', '客厅里设着奶奶的灵堂。牌位上写着"陈门李氏之灵位"。', [
-                        { text: '祭拜奶奶', action: () => { 
-                            gameState.hope += 10; 
-                            updateStatus(); 
-                            showNotification('你祭拜了奶奶，心中稍感安慰'); 
-                            renderDialog('叙述', '你祭拜了奶奶，心中稍感安慰。', [
-                                { text: '继续', action: () => changeScene('old-house-yard') }
-                            ]); 
-                        }},
+                        { text: '祭拜奶奶', action: () => { gameState.hope += 10; updateStatus(); showNotification('你祭拜了奶奶，心中稍感安慰'); renderDialog('叙述', '你祭拜了奶奶，心中稍感安慰。', [{ text: '继续', action: () => changeScene('old-house-yard') }]); } },
                         { text: '离开', action: () => changeScene('old-house-yard') }
                     ]);
                 },
                 'shop-exterior': () => {
-                    const shopSign = document.createElement('div');
-                    shopSign.className = 'shop-sign';
-                    shopSign.textContent = '张记纸扎';
-                    container.appendChild(shopSign);
-                    
-                    const lantern1 = document.createElement('div');
-                    lantern1.className = 'lantern';
-                    lantern1.style.cssText = 'top:150px;left:200px';
-                    lantern1.onclick = () => interact('lantern');
-                    container.appendChild(lantern1);
-                    
-                    const lantern2 = document.createElement('div');
-                    lantern2.className = 'lantern';
-                    lantern2.style.cssText = 'top:150px;right:200px';
-                    lantern2.onclick = () => interact('lantern');
-                    container.appendChild(lantern2);
-                    
-                    const paperMan1 = createPaperMan('bottom:100px;left:300px');
-                    container.appendChild(paperMan1);
-                    
-                    const paperMan2 = createPaperMan('bottom:100px;right:300px');
-                    container.appendChild(paperMan2);
-                    
+                    container.innerHTML += '<div class="shop-sign">张记纸扎</div><div class="lantern" style="top:150px;left:200px" onclick="interact(\'lantern\')"></div><div class="lantern" style="top:150px;right:200px" onclick="interact(\'lantern\')"></div><div class="paper-man" style="bottom:100px;left:300px" onclick="interact(\'paperman\')"><div class="eye left"></div><div class="eye right"></div><div class="mouth"></div></div><div class="paper-man" style="bottom:100px;right:300px" onclick="interact(\'paperman\')"><div class="eye left"></div><div class="eye right"></div><div class="mouth"></div></div>';
                     renderDialog('叙述', '张记纸扎铺就在眼前。两盏红灯笼发出微弱的光，门口的纸人似乎在盯着你。', [
                         { text: '进入纸扎铺', action: () => changeScene('shop-interior') },
                         { text: '返回老宅', action: () => changeScene('old-house-yard') }
                     ]);
                 },
                 'shop-interior': () => {
-                    const paperMan = createPaperMan('bottom:100px;left:100px');
-                    container.appendChild(paperMan);
-                    
-                    const lantern = document.createElement('div');
-                    lantern.className = 'lantern';
-                    lantern.style.cssText = 'top:100px;left:50%';
-                    lantern.onclick = () => interact('lantern');
-                    container.appendChild(lantern);
-                    
+                    container.innerHTML += '<div class="paper-man" style="bottom:100px;left:100px" onclick="interact(\'paperman\')"><div class="eye left"></div><div class="eye right"></div><div class="mouth"></div></div><div class="lantern" style="top:100px;left:50%" onclick="interact(\'lantern\')"></div>';
                     renderDialog('张老头', '你又来了？想知道真相？', [
                         { text: '我想知道奶奶的真相', action: () => chapter2Start() },
-                        { text: '看看有什么物品', action: () => { 
-                            if (!gameState.inventory.includes('key')) { 
-                                gameState.inventory.push('key'); 
-                                showNotification('获得：神秘钥匙🔑'); 
-                                updateInventory(); 
-                            } else { 
-                                showNotification('你已经拿过钥匙了'); 
-                            } 
-                        }},
+                        { text: '看看有什么物品', action: () => { if (!gameState.inventory.includes('key')) { gameState.inventory.push('key'); showNotification('获得：神秘钥匙🔑'); updateInventory(); } else { showNotification('你已经拿过钥匙了'); } } },
                         { text: '离开', action: () => changeScene('shop-exterior') }
                     ]);
                 },
                 'shop-secret': () => {
-                    const mist = document.createElement('div');
-                    mist.className = 'mist';
-                    container.appendChild(mist);
-                    
+                    container.innerHTML += '<div class="mist"></div>';
                     renderDialog('叙述', '你发现了密室！这里藏着张记纸扎百年的秘密...', [
                         { text: '查看秘密', action: () => chapter4Start() }
                     ]);
                 },
                 'dream': () => {
-                    const mist = document.createElement('div');
-                    mist.className = 'mist';
-                    container.appendChild(mist);
-                    
-                    const flower1 = document.createElement('div');
-                    flower1.className = 'red-flower';
-                    flower1.style.cssText = 'bottom:100px;left:20%';
-                    container.appendChild(flower1);
-                    
-                    const flower2 = document.createElement('div');
-                    flower2.className = 'red-flower';
-                    flower2.style.cssText = 'bottom:100px;right:20%';
-                    container.appendChild(flower2);
-                    
+                    container.innerHTML += '<div class="mist"></div><div class="red-flower" style="bottom:100px;left:20%"></div><div class="red-flower" style="bottom:100px;right:20%"></div>';
                     renderDialog('叙述', '你进入了梦境。四周一片迷雾，隐约可见彼岸花。', [
                         { text: '继续深入', action: () => changeScene('boundary') },
                         { text: '醒来', action: () => changeScene('old-house-hall') }
                     ]);
                 },
                 'boundary': () => {
-                    const mist = document.createElement('div');
-                    mist.className = 'mist';
-                    container.appendChild(mist);
-                    
-                    ['left:10%', 'right:10%', 'left:30%', 'right:30%'].forEach(pos => {
-                        const flower = document.createElement('div');
-                        flower.className = 'red-flower';
-                        flower.style.cssText = `bottom:50px;${pos}`;
-                        container.appendChild(flower);
-                    });
-                    
+                    container.innerHTML += '<div class="mist"></div><div class="red-flower" style="bottom:50px;left:10%"></div><div class="red-flower" style="bottom:50px;right:10%"></div><div class="red-flower" style="bottom:50px;left:30%"></div><div class="red-flower" style="bottom:50px;right:30%"></div>';
                     renderDialog('叙述', '这里是阴阳边界。彼岸花开满了道路。', [
                         { text: '继续前行', action: () => changeScene('paper-world') },
                         { text: '返回', action: () => changeScene('dream') }
                     ]);
                 },
                 'paper-world': () => {
-                    const paperMan1 = createPaperMan('bottom:100px;left:20%');
-                    container.appendChild(paperMan1);
-                    
-                    const paperMan2 = createPaperMan('bottom:100px;right:20%');
-                    container.appendChild(paperMan2);
-                    
+                    container.innerHTML += '<div class="paper-man" style="bottom:100px;left:20%" onclick="interact(\'paperman\')"><div class="eye left"></div><div class="eye right"></div><div class="mouth"></div></div><div class="paper-man" style="bottom:100px;right:20%" onclick="interact(\'paperman\')"><div class="eye left"></div><div class="eye right"></div><div class="mouth"></div></div>';
                     renderDialog('叙述', '这里是纸扎的世界。一切都是纸做的...', [
-                        { text: '探索', action: () => { 
-                            gameState.sanity -= 10; 
-                            updateStatus(); 
-                            showNotification('理智 -10'); 
-                            renderDialog('叙述', '你探索着这个诡异的世界，发现了一扇门...', [
-                                { text: '进入', action: () => chapter3Start() }, 
-                                { text: '返回', action: () => changeScene('boundary') }
-                            ]); 
-                        }},
+                        { text: '探索', action: () => { gameState.sanity -= 10; updateStatus(); showNotification('理智 -10'); renderDialog('叙述', '你探索着这个诡异的世界，发现了一扇门...', [{ text: '进入', action: () => chapter3Start() }, { text: '返回', action: () => changeScene('boundary') }]); } },
                         { text: '离开', action: () => changeScene('boundary') }
                     ]);
                 },
                 'riverside': () => {
-                    const moon = document.createElement('div');
-                    moon.className = 'moon';
-                    moon.style.cssText = 'top:50px;right:50px';
-                    container.appendChild(moon);
-                    
+                    container.innerHTML += '<div class="moon" style="top:50px;right:50px"></div>';
                     renderDialog('叙述', '你来到河边。水面上漂浮着水灯。', [
                         { text: '放水灯', action: () => { gameState.hope += 20; updateStatus(); showNotification('希望 +20'); } },
                         { text: '离开', action: () => changeScene('town-entrance') }
                     ]);
                 },
                 'shrine': () => {
-                    const shrine = document.createElement('div');
-                    shrine.className = 'shrine';
-                    shrine.style.cssText = 'top:50%;left:50%;transform:translate(-50%,-50%)';
-                    container.appendChild(shrine);
-                    
+                    container.innerHTML += '<div class="shrine" style="top:50%;left:50%;transform:translate(-50%,-50%)"></div>';
                     renderDialog('叙述', '陈家祠堂。祖先的牌位整齐排列。', [
                         { text: '查看族谱', action: () => { showNotification('你发现了惊人的秘密...'); chapter4Start(); } },
                         { text: '离开', action: () => changeScene('town-entrance') }
                     ]);
                 },
                 'graveyard': () => {
-                    const flower1 = document.createElement('div');
-                    flower1.className = 'red-flower';
-                    flower1.style.cssText = 'bottom:100px;left:30%';
-                    container.appendChild(flower1);
-                    
-                    const flower2 = document.createElement('div');
-                    flower2.className = 'red-flower';
-                    flower2.style.cssText = 'bottom:100px;right:30%';
-                    container.appendChild(flower2);
-                    
+                    container.innerHTML += '<div class="red-flower" style="bottom:100px;left:30%"></div><div class="red-flower" style="bottom:100px;right:30%"></div>';
                     renderDialog('叙述', '你来到奶奶的坟前。墓碑冰冷。', [
                         { text: '祭拜', action: () => { gameState.hope += 30; updateStatus(); showNotification('希望 +30'); finalChoice(); } },
                         { text: '离开', action: () => changeScene('town-entrance') }
@@ -840,27 +713,6 @@
             
             if (scenes[scene]) scenes[scene]();
             gameState.visited.push(getSceneName(scene));
-        }
-        
-        function createPaperMan(position) {
-            const paperMan = document.createElement('div');
-            paperMan.className = 'paper-man';
-            paperMan.style.cssText = position;
-            paperMan.onclick = () => interact('paperman');
-            
-            const eyeLeft = document.createElement('div');
-            eyeLeft.className = 'eye left';
-            paperMan.appendChild(eyeLeft);
-            
-            const eyeRight = document.createElement('div');
-            eyeRight.className = 'eye right';
-            paperMan.appendChild(eyeRight);
-            
-            const mouth = document.createElement('div');
-            mouth.className = 'mouth';
-            paperMan.appendChild(mouth);
-            
-            return paperMan;
         }
         
         function renderDialog(name, text, choices) {

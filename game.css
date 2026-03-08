@@ -398,7 +398,8 @@ body {
 
 /* ===== 立绘容器增强 ===== */
 .char-portrait {
-  position:relative; width:100px; height:160px;
+  position:relative; width:140px; height:210px;
+  overflow:hidden; border-radius:4px;
 }
 /* 陈安 CSS立绘 */
 .cp-chengan .head { position:absolute; width:44px; height:54px; background:#c8956c; border-radius:50% 50% 42% 42%; left:28px; top:8px; }

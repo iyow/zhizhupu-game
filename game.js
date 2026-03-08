@@ -342,12 +342,36 @@ function showChoices(choices) {
 function hideChoices() { dom.choicesBox.classList.remove('show'); }
 
 // ===== 立绘 =====
+// 角色立绘图片映射（AI生成图片优先，无图则退回CSS绘制）
+const PORTRAIT_IMAGES = {
+  chengan:    'images/char-chen-an.jpg',
+  zhangyi:    'images/char-zhang-yi.jpg',
+  zhanglaotou:'images/char-zhang-lao.jpg',
+};
+
 function showPortrait(type) {
   if(!type) { dom.portraitContainer.classList.remove('show'); return; }
   dom.portraitContainer.classList.add('show');
   const el = dom.portraitEl;
   el.innerHTML = '';
   el.className = 'char-portrait cp-'+type;
+
+  // 优先使用AI生成图片
+  if(PORTRAIT_IMAGES[type]) {
+    const img = document.createElement('img');
+    img.src = PORTRAIT_IMAGES[type];
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:4px;';
+    img.onerror = function() {
+      // 图片加载失败则退回CSS绘制
+      el.innerHTML = '';
+      const parts = getPortraitParts(type);
+      parts.forEach(p => { const d = document.createElement('div'); d.className = p; el.appendChild(d); });
+    };
+    el.appendChild(img);
+    return;
+  }
+
+  // CSS绘制备用
   const parts = getPortraitParts(type);
   parts.forEach(p => {
     const d = document.createElement('div');

@@ -2,6 +2,12 @@
 
 > 江南小镇，六十年的秘密，一个死不瞑目的执念，和一把刻着"渡"字的铜钱……
 
+## 🎮 在线游玩
+
+**👉 [https://iyow.github.io/zhizhupu-game/](https://iyow.github.io/zhizhupu-game/)**
+
+> 无需安装，浏览器直接打开即可游玩（支持PC / 手机）
+
 ---
 
 ## 📖 故事梗概

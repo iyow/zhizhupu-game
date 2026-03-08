@@ -66,7 +66,7 @@
       <!-- 天空渐变 -->
       <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,26,46,0.55) 0%,rgba(42,42,62,0.45) 40%,rgba(58,58,78,0.35) 70%,rgba(26,26,26,0.6) 100%);"></div>
       <!-- 满月 -->
-      <div style="position:absolute;right:15%;top:8%;width:50px;height:50px;background:radial-gradient(ellipse at 30% 30%,#ffffd0,#ffeedd);border-radius:50%;box-shadow:0 0 40px rgba(255,255,200,0.4);"></div>
+      <div style="position:absolute;right:15%;top:8%;width:70px;height:70px;background:radial-gradient(ellipse at 30% 30%,#ffffff,#ffffd0,#ffeedd);border-radius:50%;box-shadow:0 0 60px rgba(255,255,220,0.8),0 0 100px rgba(255,255,200,0.4);"></div>
       <!-- 远山剪影 -->
       <div style="position:absolute;bottom:35%;left:0;right:0;height:80px;background:#0a0a08;clip-path:polygon(0 100%,5% 60%,15% 80%,25% 50%,35% 70%,45% 40%,55% 60%,65% 35%,75% 55%,85% 45%,95% 65%,100% 100%);"></div>
       <!-- 石板路 -->
@@ -84,10 +84,12 @@
       </div>
       <!-- 路灯 -->
       <div style="position:absolute;left:45%;bottom:25%;width:4px;height:80px;background:#444;"></div>
-      <div style="position:absolute;left:42%;bottom:calc(25% + 75px);width:30px;height:20px;background:rgba(255,200,100,0.8);border-radius:50%;box-shadow:0 0 20px rgba(255,200,100,0.5);"></div>
+      <div style="position:absolute;left:41%;bottom:calc(25% + 75px);width:40px;height:25px;background:rgba(255,210,120,0.95);border-radius:50%;box-shadow:0 0 40px rgba(255,200,80,0.8),0 0 70px rgba(255,180,50,0.4);"></div>
+      <!-- 底部压暗（让装饰更突出） -->
+      <div style="position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.45));pointer-events:none;"></div>
       <!-- 花圈提示 -->
-      <div style="position:absolute;right:20%;bottom:40%;font-size:20px;animation:blink 2s infinite;">✝</div>
-      <div style="position:absolute;right:30%;bottom:35%;font-size:18px;color:#888;">✝</div>
+      <div style="position:absolute;right:20%;bottom:40%;font-size:28px;color:#fff;text-shadow:0 0 12px #fff,0 0 4px #aaa;animation:blink 2s infinite;">✝</div>
+      <div style="position:absolute;right:30%;bottom:35%;font-size:22px;color:#ddd;text-shadow:0 0 8px #fff;">✝</div>
     </div>
 
     <!-- 场景2：老宅院子 -->
@@ -101,7 +103,7 @@
       <div style="position:absolute;bottom:10%;right:10%;width:20%;height:10%;border:1px solid #333;background:#1a1816;border-radius:2px;"></div>
       <!-- 水缸 -->
       <div style="position:absolute;right:15%;bottom:25%;width:60px;height:50px;">
-        <div style="width:60px;height:40px;background:linear-gradient(180deg,#5a4030,#3a2820);border-radius:5px 5px 10px 10px;"></div>
+        <div style="width:60px;height:40px;background:linear-gradient(180deg,#7a5840,#4a3020);border-radius:5px 5px 10px 10px;border:1px solid rgba(180,140,80,0.5);box-shadow:0 2px 8px rgba(0,0,0,0.6);"></div>
         <div style="position:absolute;top:0;left:5px;right:5px;height:10px;background:#6a5040;border-radius:3px;"></div>
       </div>
       <!-- 堂屋入口 -->
@@ -110,22 +112,22 @@
         <div style="position:absolute;top:30%;left:45%;width:10%;height:3px;background:#333;"></div>
       </div>
       <!-- 灵堂烛光 -->
-      <div style="position:absolute;left:45%;bottom:55%;width:10px;height:15px;background:linear-gradient(#ff6b35,#cc2200);border-radius:2px;box-shadow:0 0 10px #ff6b35;animation:lantern-float 1.5s ease-in-out infinite;"></div>
+      <div style="position:absolute;left:45%;bottom:55%;width:12px;height:18px;background:linear-gradient(#ffaa55,#ff6b35,#cc2200);border-radius:2px;box-shadow:0 0 20px #ff8844,0 0 40px rgba(255,107,53,0.5);animation:lantern-float 1.5s ease-in-out infinite;"></div>
       <!-- 纸人位置 -->
       <div id="yard-paper-doll" class="paper-doll" style="position:absolute;right:20%;bottom:30%;width:30px;height:50px;">
         <div class="pd-body" style="width:20px;height:30px;background:var(--paper);margin:0 auto;border-radius:3px;"></div>
         <div class="pd-body" style="width:14px;height:14px;background:var(--paper);margin:-2px auto 0;border-radius:50%;"></div>
-        <div style="position:absolute;top:4px;left:50%;transform:translateX(-50%);width:3px;height:3px;background:#111;border-radius:50%;"></div>
-        <div style="position:absolute;top:4px;left:calc(50% + 5px);width:3px;height:3px;background:#111;border-radius:50%;"></div>
+        <div style="position:absolute;top:4px;left:50%;transform:translateX(-50%);width:4px;height:4px;background:#cc0000;border-radius:50%;box-shadow:0 0 4px #ff0000;"></div>
+        <div style="position:absolute;top:4px;left:calc(50% + 5px);width:4px;height:4px;background:#cc0000;border-radius:50%;box-shadow:0 0 4px #ff0000;"></div>
         <div style="position:absolute;top:8px;left:50%;transform:translateX(-50%);width:4px;height:2px;background:#cc0000;border-radius:1px;"></div>
       </div>
       <!-- 供台 -->
       <div style="position:absolute;left:10%;bottom:35%;width:40px;height:25px;background:#5a4030;border-radius:2px;">
-        <div style="position:absolute;top:-15px;left:50%;transform:translateX(-50%);width:4px;height:12px;background:linear-gradient(#ff6b35,#cc2200);box-shadow:0 0 5px #ff6b35;"></div>
+        <div style="position:absolute;top:-18px;left:50%;transform:translateX(-50%);width:5px;height:16px;background:linear-gradient(#ffcc44,#ff8844,#cc2200);box-shadow:0 0 12px #ff8844,0 0 25px rgba(255,150,50,0.5);"></div>
       </div>
       <!-- 彼岸花 -->
-      <div style="position:absolute;right:8%;bottom:20%;font-size:16px;">🌺</div>
-      <div style="position:absolute;right:12%;bottom:22%;font-size:12px;transform:rotate(-15deg);">🌺</div>
+      <div style="position:absolute;right:8%;bottom:20%;font-size:26px;filter:drop-shadow(0 0 6px rgba(255,50,50,0.7));">🌺</div>
+      <div style="position:absolute;right:12%;bottom:22%;font-size:20px;transform:rotate(-15deg);filter:drop-shadow(0 0 4px rgba(255,50,50,0.6));">🌺</div>
     </div>
 
     <!-- 场景3：老宅灵堂 -->
@@ -207,24 +209,26 @@
         <div style="position:absolute;left:calc(30% + 2px);right:calc(30% + 2px);top:35%;bottom:5%;background:linear-gradient(90deg,transparent 45%,rgba(255,200,100,0.1) 48%,rgba(255,200,100,0.05) 52%,transparent 55%);"></div>
       </div>
       <!-- 红灯笼（左） -->
-      <div class="lantern-css" style="position:absolute;left:18%;top:20%;width:25px;">
-        <div style="width:25px;height:30px;background:radial-gradient(ellipse at 30% 30%,#ff8844,#cc2200,#880000);border-radius:50%;box-shadow:0 0 15px #ff6b35,0 0 30px rgba(255,107,53,0.3);"></div>
+      <div class="lantern-css" style="position:absolute;left:16%;top:18%;width:35px;">
+        <div style="width:35px;height:45px;background:radial-gradient(ellipse at 30% 30%,#ffaa55,#ff6b35,#cc2200,#880000);border-radius:50%;box-shadow:0 0 25px #ff8844,0 0 50px rgba(255,107,53,0.5),0 0 80px rgba(200,50,0,0.3);"></div>
         <div style="width:2px;height:15px;background:#886600;margin:2px auto 0;"></div>
       </div>
       <!-- 红灯笼（右） -->
-      <div class="lantern-css" style="position:absolute;right:18%;top:20%;width:25px;animation-delay:0.5s;">
-        <div style="width:25px;height:30px;background:radial-gradient(ellipse at 30% 30%,#ff8844,#cc2200,#880000);border-radius:50%;box-shadow:0 0 15px #ff6b35,0 0 30px rgba(255,107,53,0.3);"></div>
+      <div class="lantern-css" style="position:absolute;right:16%;top:18%;width:35px;animation-delay:0.5s;">
+        <div style="width:35px;height:45px;background:radial-gradient(ellipse at 30% 30%,#ffaa55,#ff6b35,#cc2200,#880000);border-radius:50%;box-shadow:0 0 25px #ff8844,0 0 50px rgba(255,107,53,0.5),0 0 80px rgba(200,50,0,0.3);"></div>
         <div style="width:2px;height:15px;background:#886600;margin:2px auto 0;"></div>
       </div>
+      <!-- 地面压暗（托出纸人） -->
+      <div style="position:absolute;bottom:0;left:0;right:0;height:35%;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.5));pointer-events:none;"></div>
       <!-- 童男童女纸人 -->
-      <div class="paper-doll" style="position:absolute;left:22%;bottom:22%;width:20px;height:35px;">
+      <div class="paper-doll" style="position:absolute;left:21%;bottom:20%;width:28px;height:48px;filter:drop-shadow(0 0 6px rgba(255,240,200,0.8));">
         <div style="width:14px;height:14px;background:var(--paper);border-radius:50%;margin:0 auto;"></div>
         <div style="width:18px;height:20px;background:var(--paper);margin:-2px auto 0;border-radius:3px;"></div>
         <div style="width:3px;height:3px;background:#111;border-radius:50%;position:absolute;top:3px;left:3px;"></div>
         <div style="width:3px;height:3px;background:#111;border-radius:50%;position:absolute;top:3px;right:3px;"></div>
         <div style="width:5px;height:2px;background:#cc0000;border-radius:1px;position:absolute;top:8px;left:50%;transform:translateX(-50%);"></div>
       </div>
-      <div class="paper-doll" style="position:absolute;right:22%;bottom:22%;width:20px;height:35px;animation-delay:0.3s;">
+      <div class="paper-doll" style="position:absolute;right:21%;bottom:20%;width:28px;height:48px;animation-delay:0.3s;filter:drop-shadow(0 0 6px rgba(255,240,200,0.8));">
         <div style="width:14px;height:14px;background:var(--paper);border-radius:50%;margin:0 auto;"></div>
         <div style="width:18px;height:20px;background:var(--paper);margin:-2px auto 0;border-radius:3px;"></div>
         <div style="width:3px;height:3px;background:#111;border-radius:50%;position:absolute;top:3px;left:3px;"></div>
@@ -291,6 +295,8 @@
       </div>
       <!-- 地面 -->
       <div style="position:absolute;bottom:0;left:0;right:0;height:25%;background:linear-gradient(180deg,transparent,rgba(240,230,210,0.8));"></div>
+      <!-- 地面压暗 -->
+      <div style="position:absolute;bottom:0;left:0;right:0;height:30%;background:linear-gradient(180deg,transparent,rgba(200,180,140,0.4));pointer-events:none;"></div>
       <!-- 纸人群 -->
       <div style="position:absolute;bottom:20%;left:10%;display:flex;gap:6px;flex-wrap:wrap;width:80%;justify-content:center;">
         <div class="paper-doll" style="width:12px;height:20px;"><div style="width:8px;height:8px;background:rgba(255,255,255,0.9);border-radius:50%;margin:0 auto;border:1px solid #ccc;"></div><div style="width:10px;height:12px;background:rgba(255,255,255,0.9);margin:-1px auto 0;border:1px solid #ccc;"></div></div>
@@ -306,7 +312,7 @@
         <div style="width:4px;height:80px;background:#8b7355;margin:0 auto;"></div>
         <!-- 灯笼本体 -->
         <div class="lantern-css" style="margin-top:-5px;" onclick="openPuzzle('lantern')">
-          <div style="width:35px;height:45px;background:radial-gradient(ellipse at 30% 30%,#ff8844,#cc2200,#880000);border-radius:50%;box-shadow:0 0 25px #ff6b35,0 0 50px rgba(255,107,53,0.4);cursor:pointer;"></div>
+          <div style="width:45px;height:58px;background:radial-gradient(ellipse at 30% 30%,#ffcc55,#ff8844,#cc2200,#880000);border-radius:50%;box-shadow:0 0 40px #ff8844,0 0 80px rgba(255,107,53,0.6),0 0 120px rgba(200,50,0,0.3);cursor:pointer;"></div>
           <div style="width:2px;height:20px;background:#886600;margin:0 auto;"></div>
           <div style="font-size:10px;color:#cc6600;text-align:center;margin-top:4px;">点击使用铜钱</div>
         </div>
@@ -325,21 +331,23 @@
         <div style="position:absolute;top:50%;left:0;width:100%;height:1px;background:#5a4030;"></div>
       </div>
       <!-- 光柱 -->
-      <div style="position:absolute;top:10%;left:50%;transform:translateX(-50%);width:40px;height:50%;background:linear-gradient(180deg,rgba(255,255,200,0.1),transparent);"></div>
+      <div style="position:absolute;top:10%;left:50%;transform:translateX(-50%);width:60px;height:55%;background:linear-gradient(180deg,rgba(255,255,200,0.25),rgba(255,255,200,0.1),transparent);"></div>
       <!-- 旧木箱群 -->
-      <div style="position:absolute;bottom:20%;left:10%;width:60px;height:45px;background:linear-gradient(180deg,#5a4020,#3a2810);border-radius:3px;border:1px solid #6a5030;">
+      <div style="position:absolute;bottom:20%;left:10%;width:60px;height:45px;background:linear-gradient(180deg,#6a5030,#4a3820);border-radius:3px;border:1px solid rgba(180,140,80,0.6);box-shadow:0 0 10px rgba(0,0,0,0.8),inset 0 1px 0 rgba(200,160,80,0.3);">
         <div style="position:absolute;top:3px;left:3px;right:3px;height:2px;background:#6a5030;"></div>
       </div>
       <div style="position:absolute;bottom:22%;left:20%;width:50px;height:38px;background:linear-gradient(180deg,#4a3818,#2a2008);border-radius:3px;border:1px solid #5a4828;"></div>
-      <div style="position:absolute;bottom:20%;right:20%;width:70px;height:50px;background:linear-gradient(180deg,#6a4a28,#4a3018);border-radius:3px;border:1px solid #7a5a38;">
+      <div style="position:absolute;bottom:20%;right:20%;width:70px;height:50px;background:linear-gradient(180deg,#7a5a38,#5a4028);border-radius:3px;border:1px solid rgba(200,160,80,0.6);box-shadow:0 0 12px rgba(0,0,0,0.8),inset 0 1px 0 rgba(220,180,100,0.3);">
         <div style="position:absolute;top:3px;left:5px;right:5px;height:2px;background:#7a5a38;"></div>
         <div style="position:absolute;left:50%;top:0;bottom:0;width:1px;background:#7a5a38;"></div>
       </div>
       <!-- 蜘蛛网 -->
       <div style="position:absolute;top:30%;left:5%;width:40px;height:30px;border-top:1px solid rgba(200,200,200,0.2);border-right:1px solid rgba(200,200,200,0.1);border-radius:0 50% 0 0;"></div>
       <!-- 灰尘光柱中的飞舞感 -->
-      <div style="position:absolute;top:12%;left:49%;width:2px;height:2px;background:rgba(255,255,200,0.4);border-radius:50%;animation:lantern-float 3s linear infinite;"></div>
-      <div style="position:absolute;top:18%;left:51%;width:1px;height:1px;background:rgba(255,255,200,0.3);border-radius:50%;animation:lantern-float 2.5s linear infinite;animation-delay:0.8s;"></div>
+      <div style="position:absolute;top:12%;left:49%;width:3px;height:3px;background:rgba(255,255,200,0.8);border-radius:50%;box-shadow:0 0 4px rgba(255,255,150,0.6);animation:lantern-float 3s linear infinite;"></div>
+      <div style="position:absolute;top:18%;left:51%;width:2px;height:2px;background:rgba(255,255,200,0.6);border-radius:50%;box-shadow:0 0 3px rgba(255,255,150,0.5);animation:lantern-float 2.5s linear infinite;animation-delay:0.8s;"></div>
+      <!-- 四角晕影（突出光柱+木箱） -->
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,transparent 35%,rgba(0,0,0,0.55) 100%);pointer-events:none;"></div>
       <!-- 点击翻找提示 -->
       <div style="position:absolute;bottom:35%;left:50%;transform:translateX(-50%);font-size:12px;color:#554030;text-align:center;">点击木箱翻找</div>
     </div>
@@ -452,18 +460,20 @@
         <!-- 树冠（苍绿侧） -->
         <div style="position:absolute;right:0;top:10px;width:65px;height:100px;background:radial-gradient(ellipse at 50% 50%,#2a4020,#1a3010,#0a2008);border-radius:50%;"></div>
         <!-- 雨水珠滴 -->
-        <div style="position:absolute;right:20px;top:80px;width:1px;height:5px;background:rgba(180,200,210,0.4);animation:falling 1.2s linear infinite;"></div>
-        <div style="position:absolute;right:30px;top:90px;width:1px;height:4px;background:rgba(180,200,210,0.3);animation:falling 1.5s linear infinite;animation-delay:0.3s;"></div>
+        <div style="position:absolute;right:20px;top:80px;width:2px;height:8px;background:rgba(200,230,255,0.7);box-shadow:0 0 3px rgba(180,210,255,0.5);animation:falling 1.2s linear infinite;"></div>
+        <div style="position:absolute;right:30px;top:90px;width:2px;height:6px;background:rgba(200,230,255,0.55);box-shadow:0 0 3px rgba(180,210,255,0.4);animation:falling 1.5s linear infinite;animation-delay:0.3s;"></div>
       </div>
       <!-- 地面积水反光 -->
       <div style="position:absolute;bottom:0;left:0;right:0;height:20%;background:linear-gradient(180deg,transparent,rgba(50,60,50,0.6));"></div>
       <div style="position:absolute;bottom:8%;left:30%;right:30%;height:4px;background:linear-gradient(90deg,transparent,rgba(150,160,150,0.3),transparent);border-radius:50%;"></div>
       <!-- 路灯 -->
       <div style="position:absolute;left:15%;bottom:20%;width:3px;height:100px;background:#333;"></div>
-      <div style="position:absolute;left:13%;bottom:calc(20% + 98px);width:20px;height:12px;background:rgba(255,200,100,0.6);border-radius:50%;box-shadow:0 0 15px rgba(255,200,100,0.3);"></div>
+      <div style="position:absolute;left:12%;bottom:calc(20% + 96px);width:28px;height:16px;background:rgba(255,210,120,0.9);border-radius:50%;box-shadow:0 0 30px rgba(255,200,80,0.7),0 0 60px rgba(255,180,50,0.3);"></div>
+      <!-- 四角晕影 -->
+      <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 30%,rgba(0,0,0,0.5) 100%);pointer-events:none;"></div>
       <!-- 彼岸花（树根） -->
-      <div style="position:absolute;bottom:18%;left:44%;font-size:12px;opacity:0.7;">🌺</div>
-      <div style="position:absolute;bottom:16%;left:52%;font-size:10px;opacity:0.5;transform:rotate(-10deg);">🌺</div>
+      <div style="position:absolute;bottom:18%;left:43%;font-size:22px;filter:drop-shadow(0 0 8px rgba(255,30,30,0.8));">🌺</div>
+      <div style="position:absolute;bottom:16%;left:53%;font-size:17px;transform:rotate(-10deg);filter:drop-shadow(0 0 6px rgba(255,30,30,0.6));">🌺</div>
       <!-- 煞的存在（光影错误） -->
       <div id="sha-shadow" style="position:absolute;top:40%;right:10%;width:30px;height:80px;background:linear-gradient(180deg,transparent,rgba(0,0,0,0.4),transparent);transform:rotate(-15deg);filter:blur(3px);display:none;"></div>
       <!-- 血符（完成后显示） -->

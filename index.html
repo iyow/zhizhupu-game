@@ -7,6 +7,9 @@
 <link rel="stylesheet" href="game.css">
 </head>
 <body>
+<script src="src/state.js"></script>
+<script src="src/data/dialogs.js"></script>
+<script src="src/data/hotspots.js"></script>
 <div id="game-container">
   <!-- 状态栏 -->
   <div id="status-bar">
@@ -548,56 +551,6 @@
 
 </div><!-- end game-container -->
 
-<script src="game.js"></script>
-<script>
-// 补充：暗室开锁触发
-function startOpenLock() {
-  if(!G.items.key) { showNotify('你需要归魂钥匙'); return; }
-  showDialogues(DIALOGS.ch3_open_lock, ()=>{
-    flashWhite(()=>{
-      fadeToScene('shop-interior', ()=>{
-        showDialogues(DIALOGS.ch3_run_out, ()=>startChapter4());
-      });
-    });
-  });
-}
-
-// 谜题关闭（可取消类）
-function closePuzzleCancel() {
-  if(G.inPuzzle) {
-    changeSanity(-5);
-    closePuzzle();
-  }
-}
-
-// 阁楼进入时自动打开谜题
-document.getElementById('scene-attic').addEventListener('click', function(e) {
-  if(e.target.classList.contains('attic-box') || e.target.closest('.attic-box')) return;
-  if(!G.inPuzzle && G.scene==='attic' && !G.flags.attic_done) {
-    openPuzzle('attic');
-  }
-});
-
-// 修复 switchScene 以包含热区构建
-const _origSwitchScene = switchScene;
-window.switchScene = function(id) {
-  _origSwitchScene(id);
-  buildHotspots(id);
-};
-
-// 场景12 煞现身动画
-function showShaShadow() {
-  const el = document.getElementById('sha-shadow');
-  if(el) el.style.display='block';
-}
-
-// 血符完成后显示
-const _origCompleteBlood = completeBloodPuzzle;
-window.completeBloodPuzzle = function() {
-  const seal = document.getElementById('blood-seal');
-  if(seal) seal.style.display='block';
-  _origCompleteBlood();
-};
-</script>
+<script src="src/game.js"></script>
 </body>
 </html>
